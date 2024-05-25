@@ -7,33 +7,27 @@ export async function POST(request: Request) {
   console.log("request: ", request.body);
 
   const {
-    title,
-    videoLink,
-    categoryName,
-    courseName,
-    batch,
-    isActive,
-    courseType,
-    orderNo,
+    courseTitle,
+    courseDescription,
     price,
-    imageUrl,
-    emiMode,
-    numberOfEmi,
-    zoomLink,
-    zoomId,
-    zoomPassword,
-    youtubeLink,
-    videoDescription,
+    totalApplied,
+    downloadSyllabus,
+    courseType,
+    startDate,
+    endDate,
+    duration,
+    aboutCourse,
+    tools,
   } = await request.json();
 
-  console.log("title: ", title);
-  console.log("videoLink: ", videoLink);
+  console.log("courseTitle: ", courseTitle);
+  console.log("courseDescription: ", courseDescription);
 
   await dbConnect();
 
   try {
     const existingCourse = await CourseModel.findOne({
-      $or: [{ title: title }],
+      $or: [{ courseTitle }],
     });
 
     console.log("existingCourse: ", existingCourse);
@@ -51,23 +45,17 @@ export async function POST(request: Request) {
     }
 
     const newCourse = new CourseModel({
-      title,
-      videoLink,
-      categoryName,
-      courseName,
-      batch,
-      isActive,
-      courseType,
-      orderNo,
+      courseTitle,
+      courseDescription,
       price,
-      imageUrl,
-      emiMode,
-      numberOfEmi,
-      zoomLink,
-      zoomId,
-      zoomPassword,
-      youtubeLink,
-      videoDescription,
+      totalApplied,
+      downloadSyllabus,
+      courseType,
+      startDate,
+      endDate,
+      duration,
+      aboutCourse,
+      tools,
     });
 
     const response = await newCourse.save();
