@@ -4,50 +4,30 @@ import InputField from '@/components/InputField';
 
 const IndexPage: React.FC = () => {
   const [formData, setFormData] = useState({
-    courseTitle: '',
-    courseDescription: '',
-    price: '',
-    totalApplied: '',
-    downloadSyllabus: '',
-    courseType: '',
-    startDate: '',
-    endDate: '',
-    duration: '',
-    aboutCourse: '',
-    tools: ['']
+    title: '',
+    description: '',
+    imageLink: '',
+    coursePrice: '',
+    premiumPrice: '',
+    tags: '',
+    downloadLink: ''
   });
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const handleChange = (field: keyof typeof formData, index?: number) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  const handleChange = (field: keyof typeof formData) => (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    if (field === 'tools' && typeof index === 'number') {
-      const tools = [...formData.tools];
-      tools[index] = e.target.value;
-      setFormData({ ...formData, tools });
-    } else {
-      setFormData({ ...formData, [field]: e.target.value });
-    }
-  };
-
-  const handleAddTool = () => {
-    setFormData({ ...formData, tools: [...formData.tools, ''] });
-  };
-
-  const handleRemoveTool = (index: number) => {
-    const tools = [...formData.tools];
-    tools.splice(index, 1);
-    setFormData({ ...formData, tools });
+    setFormData({ ...formData, [field]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { courseTitle, courseDescription, price, totalApplied, downloadSyllabus, courseType, startDate, endDate, duration, aboutCourse, tools } = formData;
-    if (!courseTitle || !courseDescription || !price || !courseType || !startDate || !endDate || !duration || !aboutCourse) {
-      setError('All fields except tools are required');
+    const { title, description, imageLink, coursePrice, premiumPrice, tags, downloadLink } = formData;
+    if (!title || !description || !imageLink || !coursePrice || !premiumPrice || !tags || !downloadLink) {
+      setError('All fields are required');
       setSuccess('');
       return;
     }
@@ -74,17 +54,13 @@ const IndexPage: React.FC = () => {
       console.log('Success:', data);
 
       setFormData({
-        courseTitle: '',
-        courseDescription: '',
-        price: '',
-        totalApplied: '',
-        downloadSyllabus: '',
-        courseType: '',
-        startDate: '',
-        endDate: '',
-        duration: '',
-        aboutCourse: '',
-        tools: ['']
+        title: '',
+        description: '',
+        imageLink: '',
+        coursePrice: '',
+        premiumPrice: '',
+        tags: '',
+        downloadLink: ''
       });
       setSuccess('Course uploaded successfully');
     } catch (error) {
@@ -95,31 +71,64 @@ const IndexPage: React.FC = () => {
   };
 
   return (
-    <div className="container min-h-screen mx-auto p-6 w-full max-w-screen-lg">
+    <div className="container min-h-screen mx-auto p-4 sm:p-6 md:p-8 w-full max-w-screen-lg">
       <h1 className="text-3xl font-semibold mb-8 text-center text-gray-800">Admin Course Upload</h1>
-      <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-8 space-y-6">
+      <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-6 sm:p-8 space-y-6">
         {error && <p className="text-red-600 text-center">{error}</p>}
         {success && <p className="text-green-600 text-center">{success}</p>}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <InputField label="Course Title" value={formData.courseTitle} onChange={handleChange('courseTitle')} />
-          <InputField label="Course Description" value={formData.courseDescription} onChange={handleChange('courseDescription')} type="textarea" />
-          <InputField label="Price" value={formData.price} onChange={handleChange('price')} />
-          <InputField label="Total Applied" value={formData.totalApplied} onChange={handleChange('totalApplied')} />
-          <InputField label="Download Syllabus Link" value={formData.downloadSyllabus} onChange={handleChange('downloadSyllabus')} />
-          <InputField label="Course Type" value={formData.courseType} onChange={handleChange('courseType')} />
-          <InputField label="Start Date" value={formData.startDate} onChange={handleChange('startDate')} type="date" />
-          <InputField label="End Date" value={formData.endDate} onChange={handleChange('endDate')} type="date" />
-          <InputField label="Duration" value={formData.duration} onChange={handleChange('duration')} />
-          <InputField label="About Course" value={formData.aboutCourse} onChange={handleChange('aboutCourse')} type="textarea" />
-          {formData.tools.map((tool, index) => (
-            <div key={index} className="flex items-center space-x-2">
-              <InputField label={`Tool ${index + 1}`} value={tool} onChange={handleChange('tools', index)} />
-              <button type="button" onClick={() => handleRemoveTool(index)} className="text-red-500">Remove</button>
-            </div>
-          ))}
-          <button type="button" onClick={handleAddTool} className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded">
-            Add Tool
-          </button>
+        <div className="grid grid-cols-1 gap-6">
+          <InputField
+            label="Title"
+            value={formData.title}
+            onChange={handleChange('title')}
+            placeholder="Enter the course title"
+          />
+          <InputField
+            label="Description"
+            value={formData.description}
+            onChange={handleChange('description')}
+            type="textarea"
+            placeholder="Enter the course description"
+          />
+          <InputField
+            label="Image Link"
+            value={formData.imageLink}
+            onChange={handleChange('imageLink')}
+            placeholder="Enter the image URL"
+          />
+          <InputField
+            label="Course Price"
+            value={formData.coursePrice}
+            onChange={handleChange('coursePrice')}
+            placeholder="Enter the course price in ₹"
+          />
+          <InputField
+            label="Premium Price"
+            value={formData.premiumPrice}
+            onChange={handleChange('premiumPrice')}
+            placeholder="Enter the premium price in ₹"
+          />
+          <div>
+            <label className="block text-gray-700 font-bold mb-2">Tags</label>
+            <select
+              value={formData.tags}
+              onChange={handleChange('tags')}
+              className="w-full p-2 border border-gray-300 rounded-md"
+            >
+              <option value="">Select a tag</option>
+              <option value="Software">Software</option>
+              <option value="Courses">Courses</option>
+              <option value="Premium Graphics">Premium Graphics</option>
+              <option value="Influencer Media">Influencer Media</option>
+              <option value="Extra Premium">Extra Premium</option>
+            </select>
+          </div>
+          <InputField
+            label="Download Link"
+            value={formData.downloadLink}
+            onChange={handleChange('downloadLink')}
+            placeholder="Enter the download link"
+          />
         </div>
         <div className="flex justify-center mt-6">
           <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-200" type="submit">

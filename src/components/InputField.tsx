@@ -2,27 +2,31 @@ import React from 'react';
 
 interface InputFieldProps {
   label: string;
-  value: string | boolean;
+  value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  type?: string;
+  type?: 'text' | 'textarea';
+  placeholder?: string;
 }
 
-const InputField: React.FC<InputFieldProps> = ({ label, value, onChange, type = "text" }) => {
+const InputField: React.FC<InputFieldProps> = ({ label, value, onChange, type = 'text', placeholder }) => {
   return (
-    <div className="mb-4">
-      <label className="block text-gray-700 text-sm font-bold mb-2">{label}</label>
-      {type === "textarea" ? (
+    <div>
+      <label className="block text-gray-700 font-bold mb-2">{label}</label>
+      {type === 'textarea' ? (
         <textarea
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          value={value as string}
+          className="w-full p-2 border border-gray-300 rounded-md"
+          value={value}
           onChange={onChange}
+          placeholder={placeholder}
+          rows={4}
         />
       ) : (
         <input
           type={type}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          value={value as string}
+          className="w-full p-2 border border-gray-300 rounded-md"
+          value={value}
           onChange={onChange}
+          placeholder={placeholder}
         />
       )}
     </div>
